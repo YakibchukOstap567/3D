@@ -1,5 +1,6 @@
 #include "ImageViewer.h"
 
+
 ImageViewer::ImageViewer(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::ImageViewerClass)
 {
@@ -306,6 +307,21 @@ void ImageViewer::on_actionSave_as_triggered()
         msgBox.exec();
     }
 }
+void ImageViewer::on_actionSave_vtk_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Save 3D model", "", "VTK files (*.vtk)");
+    if (fileName.isEmpty()) return;
+
+    if (Widget3D.vtkSave(fileName)) {
+        msgBox.setText("Unable to save image.");
+        msgBox.setIcon(QMessageBox::Warning);
+    }
+    else {
+        msgBox.setText(QString("Vtk file saved.").arg(fileName));
+        msgBox.setIcon(QMessageBox::Information);
+    }
+
+}
 void ImageViewer::on_actionClear_triggered()
 {
     vW->clear();
@@ -437,6 +453,14 @@ void ImageViewer::on_FillType_currentIndexChanged(int index)
 {
     vW->setFillType(index);
     vW->drawPolygon(globalColor, ui->comboBoxLineAlg->currentIndex(), true);
+}
+
+void ImageViewer::on_cubeButton_clicked()
+{
+    double l = ui->length->value();
+    Widget3D.createCube(l);
+
+
 }
 
 

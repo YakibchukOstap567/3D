@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include "ui_ImageViewer.h"
 #include "ViewerWidget.h"
+#include "Widget3D.h"
 
 
 
@@ -24,6 +25,8 @@ private:
 	QColor colorT0;
 	QColor colorT1;
 	QColor colorT2;
+	Widget3D Widget3D;
+
 	//Event filters
 	bool eventFilter(QObject* obj, QEvent* event);
 
@@ -46,6 +49,7 @@ private:
 private slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_as_triggered();
+	void on_actionSave_vtk_triggered();
 	void on_actionClear_triggered();
 	void on_actionExit_triggered();
 
@@ -63,4 +67,5 @@ private slots:
 	void on_T1_clicked();
 	void on_T2_clicked();
 	void on_FillType_currentIndexChanged(int index);
+	void on_cubeButton_clicked();
 };
