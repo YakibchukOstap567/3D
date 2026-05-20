@@ -286,6 +286,23 @@ void ImageViewer::on_actionOpen_triggered()
         msgBox.exec();
     }
 }
+void ImageViewer::on_actionOpen_vtk_triggered()
+{
+    QString file = QFileDialog::getOpenFileName(this, "Load vtk", "", "VTK Files (*.vtk)");
+
+    if (!file.isEmpty()) {
+        if (Widget3D.vtkLoad(file)) {
+            QMessageBox::information(this, "Success", "Vtk file loaded successfully!");
+        }
+        else {
+            QMessageBox::critical(this, "Error", "Failed to read vtk file.");
+        }
+
+
+
+
+    }
+}
 void ImageViewer::on_actionSave_as_triggered()
 {
     QString folder = settings.value("folder_img_save_path", "").toString();

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>818</width>
-    <height>799</height>
+    <height>873</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
          <x>0</x>
          <y>0</y>
          <width>491</width>
-         <height>719</height>
+         <height>793</height>
         </rect>
        </property>
       </widget>
@@ -48,6 +48,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen"/>
+    <addaction name="actionOpen_vtk"/>
     <addaction name="actionSave_as"/>
     <addaction name="actionSave_vtk"/>
     <addaction name="separator"/>
@@ -468,6 +469,11 @@
   <action name="actionSave_vtk">
    <property name="text">
     <string>Save vtk</string>
+   </property>
+  </action>
+  <action name="actionOpen_vtk">
+   <property name="text">
+    <string>Open vtk</string>
    </property>
   </action>
  </widget>

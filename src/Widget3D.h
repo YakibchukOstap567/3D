@@ -41,7 +41,7 @@ public:
 	void sphereCreator(double r, int p, int m);
 
 	bool vtkSave(QString file);
-
+	bool vtkLoad(QString file);
 	
 };
 

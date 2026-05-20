@@ -93,3 +93,61 @@ bool Widget3D::vtkSave(QString filename)
 	return true;
 
 }
+
+bool Widget3D::vtkLoad(QString file)
+{
+	points.clear();
+	triangles.clear();
+
+	string path = file.toStdString();
+	ifstream file1(path);
+	string line;
+	string head;
+
+	int pointsCount=0,trianglesCount=0,trash,p1,p2,p3;
+	string pointsType;
+
+	int objectNum, totalNum;
+
+	if (!file1.is_open())
+		return false;
+
+	while (getline(file1, line)) {
+		stringstream ss(line);
+		ss >> head;
+		if (head == "POINTS") {
+			ss >> pointsCount;
+			ss >> pointsType;
+			break;
+		}
+	}
+	points.resize(pointsCount);
+	for (int i = 0; i < pointsCount; i++) {
+		getline(file1, line);
+		stringstream ss(line);
+		ss >> points[i].x; 
+		ss >> points[i].y;
+		ss >> points[i].z;
+	}
+	
+	getline(file1, line);
+	stringstream ss(line);
+	ss >> head;
+	if (head == "POLYGONS") {
+		ss >> trianglesCount;
+		ss >> pointsCount;
+	}
+
+	for (int i = 0; i < trianglesCount; i++) {
+		getline(file1, line);
+		stringstream ss(line);
+		ss >> trash;
+		ss >> p1;
+		ss >> p2;
+		ss >> p3;
+		addTriangle(p1, p2, p3);
+	}
+	
+	file1.close();
+	return true;
+}
