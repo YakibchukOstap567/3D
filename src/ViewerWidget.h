@@ -1,6 +1,6 @@
 #pragma once
 #include <QtWidgets>
-
+#include "Widget3D.h"
 struct Vertex {
     QPoint pos;
     QColor color;
@@ -31,7 +31,7 @@ private:
     
     QVector<QPoint> curveEvaluated;
 
-   
+    Widget3D w3D;
    
 public:
     ViewerWidget(QSize imgSize, QWidget* parent = Q_NULLPTR);
@@ -122,7 +122,7 @@ public:
     void Bezier();
     void BSpline();
     void drawCurve(const QColor& color);
-   
+    void draw3D(Widget3D widget3D);
 public slots:
     void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 

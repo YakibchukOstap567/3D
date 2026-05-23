@@ -872,3 +872,21 @@ void ViewerWidget::drawCurve(const QColor& color)
     update();
 }
 
+void ViewerWidget::draw3D(Widget3D widget3D)
+{
+   img->fill(Qt::white);
+   QVector<Point> projectedPoints = widget3D.cameraManager();
+   QVector<Triangle> triangles = widget3D.getTriangles();
+   for (auto& t : triangles) {
+       
+       int t1 = t.trianglePoints[0];
+       int t2 = t.trianglePoints[1];
+       int t3 = t.trianglePoints[2];
+
+       drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue);
+       drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue);
+       drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue);
+   }
+   update();
+}
+

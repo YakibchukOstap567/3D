@@ -19,7 +19,8 @@ ImageViewer::ImageViewer(QWidget* parent)
     QString style_sheet = QString("background-color: %1;").arg(globalColor.name(QColor::HexRgb));
     ui->pushButtonSetColor->setStyleSheet(style_sheet);
     ui->deg->setRange(-360.0, 360.0);
-
+    ui->azimut->setRange(0, 360);
+    ui->zenit->setRange(-90, 90);
     
     colorT0 = Qt::red;
     colorT1 = Qt::green;
@@ -288,10 +289,10 @@ void ImageViewer::on_actionOpen_triggered()
 }
 void ImageViewer::on_actionOpen_vtk_triggered()
 {
-    QString file = QFileDialog::getOpenFileName(this, "Load vtk", "", "VTK Files (*.vtk)");
+    QString file1 = QFileDialog::getOpenFileName(this, "Load vtk", "", "VTK Files (*.vtk)");
 
-    if (!file.isEmpty()) {
-        if (Widget3D.vtkLoad(file)) {
+    if (!file1.isEmpty()) {
+        if (w3D.vtkLoad(file1)) {
             QMessageBox::information(this, "Success", "Vtk file loaded successfully!");
         }
         else {
@@ -329,7 +330,7 @@ void ImageViewer::on_actionSave_vtk_triggered()
     QString fileName = QFileDialog::getSaveFileName(this, "Save 3D model", "", "VTK files (*.vtk)");
     if (fileName.isEmpty()) return;
 
-    if (Widget3D.vtkSave(fileName)) {
+    if (w3D.vtkSave(fileName)) {
         msgBox.setText("Unable to save image.");
         msgBox.setIcon(QMessageBox::Warning);
     }
@@ -475,7 +476,7 @@ void ImageViewer::on_FillType_currentIndexChanged(int index)
 void ImageViewer::on_cubeButton_clicked()
 {
     double l = ui->length->value();
-    Widget3D.cubeCreator(l);
+    w3D.cubeCreator(l);
 
 
 }
@@ -485,9 +486,30 @@ void ImageViewer::on_sphereButton_clicked()
     double r = ui->radius->value();
     double p = ui->poludnik->value();
     double m = ui->rovnobezka->value();
-    Widget3D.sphereCreator(r, p, m);
+    w3D.sphereCreator(r, p, m);
 
 
+}
+
+void ImageViewer::on_draw3D_clicked()
+{
+    w3D.setAzimut(ui->azimut->value());
+    w3D.setZenit(ui->zenit->value());
+    w3D.setProjectionType(ui->projectionTypeBox->currentIndex());
+    w3D.setRange(ui->range->value());
+    vW->draw3D(w3D);
+}
+
+void ImageViewer::on_azimut_valueChanged()
+{
+    w3D.setAzimut(ui->azimut->value());
+    vW->draw3D(w3D);
+}
+
+void ImageViewer::on_zenit_valueChanged()
+{
+    w3D.setZenit(ui->zenit->value());
+    vW->draw3D(w3D);
 }
 
 

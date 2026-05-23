@@ -25,7 +25,7 @@ private:
 	QColor colorT0;
 	QColor colorT1;
 	QColor colorT2;
-	Widget3D Widget3D;
+	Widget3D w3D;
 
 	//Event filters
 	bool eventFilter(QObject* obj, QEvent* event);
@@ -70,4 +70,7 @@ private slots:
 	void on_FillType_currentIndexChanged(int index);
 	void on_cubeButton_clicked();
 	void on_sphereButton_clicked();
+	void on_draw3D_clicked();
+	void on_azimut_valueChanged();
+	void on_zenit_valueChanged();
 };

@@ -9,15 +9,15 @@ void Widget3D::cubeCreator(double l)
 {
 	points.clear();
 	triangles.clear();
-
-	points.push_back({ 0,0,0 });
-	points.push_back({ l,0,0 });
-	points.push_back({ l,l,0 });
-	points.push_back({ 0,l,0 });
-	points.push_back({ 0,0,l });
-	points.push_back({ l,0,l });
-	points.push_back({ l,l,l });
-	points.push_back({ 0,l,l });
+	//-l/2 l/2
+	points.push_back({ -l / 2,-l / 2,-l / 2 });
+	points.push_back({ l / 2,-l / 2,-l / 2 });
+	points.push_back({ l / 2,l / 2,-l / 2 });
+	points.push_back({ -l / 2,l / 2,-l / 2 });
+	points.push_back({ -l / 2,-l / 2,l / 2 });
+	points.push_back({ l / 2,-l / 2,l / 2 });
+	points.push_back({ l / 2,l / 2,l / 2 });
+	points.push_back({ -l / 2,l / 2,l / 2 });
 
 	addTriangle(0,1,4);
 	addTriangle(1, 5, 4);
@@ -44,7 +44,7 @@ void Widget3D::sphereCreator(double r, int p, int m)
 	double polar = M_PI / m;
 	double azimut = 2 * M_PI / p;
 
-	for (double i = 0; i <= M_PI; i += polar) {
+	for ( double i = 0; i <= M_PI; i += polar) {
 		for (double j = 0; j <= 2 * M_PI; j += azimut) {
 
 			points.push_back({ r * sin(i) * cos(j),r * cos(i) ,r * sin(i) * sin(j) });
@@ -52,11 +52,11 @@ void Widget3D::sphereCreator(double r, int p, int m)
 		}
 
 	}
-	for (double i = 0; i <= m; i++) {
-		for (double j = 0; j <= p; j++) {
-
-			addTriangle(i * m + j, i * m + j + 1, (i + 1) * m + j + 1);
-			addTriangle(i * m + j, (i + 1) * m + j + 1, (i + 1) * m + j);
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < p; j++) {
+			// (p+1)
+			addTriangle(i * (p + 1) + j, i * (p + 1) + j + 1, (i + 1) * (p + 1) + j + 1);
+			addTriangle(i * (p + 1) + j, (i + 1) * (p + 1) + j + 1, (i + 1) * (p + 1) + j);
 
 
 
@@ -150,4 +150,46 @@ bool Widget3D::vtkLoad(QString file)
 	
 	file1.close();
 	return true;
+}
+
+QVector<Point> Widget3D::cameraManager()
+{
+	double Ux, Uy, Uz, Nx, Ny, Nz, Vx, Vy, Vz;
+	//QVector<Point> Vi;
+	QVector<Point> projectedPoints;
+	double z = zenit * M_PI / 180;
+	double a = azimut * M_PI / 180;
+	Ux = sin(z+ M_PI / 2 ) * sin(a);
+	Uy = sin(z + M_PI / 2) * cos(a);
+	Uz = cos(z + M_PI / 2);
+
+	Nx = sin(z) * sin(a);
+	Ny = sin(z) * cos(a);
+	Nz = cos(z);
+
+	Vx = Uy * Nz - Uz * Ny;
+	Vy = Uz * Nx - Ux * Nz;
+	Vz = Ux * Ny - Uy * Nx;
+
+	/*Vx = sin(z + M_PI / 2) * cos(a)*cos(z)-cos(z+M_PI/2)*sin(z)*cos(a);
+	Vy = cos(z + M_PI / 2) * sin(a) * sin(z) - sin(z + M_PI / 2) * sin(a) * cos(z);
+	Vz = sin(z + M_PI / 2) * cos(a) * cos(z)*sin(a) - sin(z + M_PI / 2) * sin(z) * cos(a)*sin(a);*/
+
+	/*for (auto& p : points) {
+		Vi.push_back({ p.x * Vx + p.y * Vy + p.z * Vz ,p.x * Ux + p.y * Uy + p.z * Uz, p.x * Nx + p.y * Ny + p.z * Nz });
+	}*/
+	
+	if (projectionType == 0) {
+		for (auto& p : points) {
+			projectedPoints.push_back({ p.x * Vx + p.y * Vy + p.z * Vz ,p.x * Ux + p.y * Uy + p.z * Uz, 0 });
+		}
+
+	}
+	else {
+		for (auto& p : points) {
+			projectedPoints.push_back({ range * (p.x * Vx + p.y * Vy + p.z * Vz) /(range- (p.x * Nx + p.y * Ny + p.z * Nz)),range * (p.x * Ux + p.y * Uy + p.z * Uz) / (range -( p.x * Nx + p.y * Ny + p.z * Nz)), 0});
+		}
+
+	}
+	return projectedPoints;
 }
