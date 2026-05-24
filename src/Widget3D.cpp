@@ -181,13 +181,13 @@ QVector<Point> Widget3D::cameraManager()
 	
 	if (projectionType == 0) {
 		for (auto& p : points) {
-			projectedPoints.push_back({ p.x * Vx + p.y * Vy + p.z * Vz ,p.x * Ux + p.y * Uy + p.z * Uz, 0 });
+			projectedPoints.push_back({ p.x * Vx + p.y * Vy + p.z * Vz ,p.x * Ux + p.y * Uy + p.z * Uz, p.x * Nx + p.y * Ny + p.z * Nz });
 		}
 
 	}
 	else {
 		for (auto& p : points) {
-			projectedPoints.push_back({ range * (p.x * Vx + p.y * Vy + p.z * Vz) /(range- (p.x * Nx + p.y * Ny + p.z * Nz)),range * (p.x * Ux + p.y * Uy + p.z * Uz) / (range -( p.x * Nx + p.y * Ny + p.z * Nz)), 0});
+			projectedPoints.push_back({ range * (p.x * Vx + p.y * Vy + p.z * Vz) /(range- (p.x * Nx + p.y * Ny + p.z * Nz)),range * (p.x * Ux + p.y * Uy + p.z * Uz) / (range -( p.x * Nx + p.y * Ny + p.z * Nz)), range * (p.x * Nx + p.y * Ny + p.z * Nz) / (range - (p.x * Nx + p.y * Ny + p.z * Nz)) });
 		}
 
 	}

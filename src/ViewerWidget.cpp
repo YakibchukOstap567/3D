@@ -122,7 +122,7 @@ void ViewerWidget::drawLine(QPoint start, QPoint end, QColor color, int algType)
     if (!img || !data) return;
 
     if (algType == 0) {
-        drawLineDDA(start, end, color);
+        drawLineDDA(start, end,color, 0);
     }
     else if (algType == 1) {
         drawLineBresenham(start, end, color);
@@ -143,7 +143,7 @@ void ViewerWidget::clear()
     update();
 }
 
-void ViewerWidget::drawLineDDA(QPoint start, QPoint end, QColor color)
+void ViewerWidget::drawLineDDA(QPoint start, QPoint end ,QColor color, double z = 0)
 {
     if (!img || !data) return;
 
@@ -159,7 +159,7 @@ void ViewerWidget::drawLineDDA(QPoint start, QPoint end, QColor color)
         while (true) {
             int xi = (int)(x + 0.5);
             int yi = (int)(y + 0.5);
-            setPixel(xi, yi, color);
+            setZPixel(xi, yi,z, color);
 
             if (xi == x2) {
                 break;
@@ -180,7 +180,7 @@ void ViewerWidget::drawLineDDA(QPoint start, QPoint end, QColor color)
         while (true) {
             int xi = (int)(x + 0.5);
             int yi = (int)(y + 0.5);
-            setPixel(xi, yi, color);
+            setZPixel(xi, yi,z, color);
 
             if (yi == y2) {
                 break;
@@ -290,7 +290,7 @@ void ViewerWidget::drawPolygon(QColor color, int algType, bool closed)
         }
         else {
 
-            Scan_line(color);
+            Scan_line(polygonPoints,color,0);
         }
     }
     QVector<QPoint> clippedPoints;
@@ -302,7 +302,7 @@ void ViewerWidget::drawPolygon(QColor color, int algType, bool closed)
         clippedPoints = lineClip(polygonPoints[0], polygonPoints[1]);
 
         if (clippedPoints.size() == 2)
-            drawLine(clippedPoints[0], clippedPoints[1], color, algType);
+            drawLine(clippedPoints[0], clippedPoints[1],color, algType);
 
         update();
         return;
@@ -556,17 +556,17 @@ QVector<QPoint> ViewerWidget::clipPolygon(const QVector<QPoint>& sourcePoints) {
     return V;
 }
 
-void ViewerWidget::Scan_line(const QColor& color)
+void ViewerWidget::Scan_line(QVector<QPoint> points,const QColor& color, double z = 0)
 {
 
-    if (!img || polygonPoints.size() < 3)
+    if (!img || points.size() < 3)
         return;
 
-    int ymin = polygonPoints[0].y();
-    int ymax = polygonPoints[0].y();
+    int ymin = points[0].y();
+    int ymax = points[0].y();
 
     
-    for (const QPoint& p : polygonPoints) {
+    for (const QPoint& p : points) {
         if (p.y() < ymin) ymin = p.y();
         if (p.y() > ymax) ymax = p.y();
     }
@@ -580,9 +580,9 @@ void ViewerWidget::Scan_line(const QColor& color)
         QVector<int> xYes;
 
        
-        for (int i = 0; i < polygonPoints.size(); i++) {
-            QPoint p1 = polygonPoints[i];
-            QPoint p2 = polygonPoints[(i + 1) % polygonPoints.size()];
+        for (int i = 0; i < points.size(); i++) {
+            QPoint p1 = points[i];
+            QPoint p2 = points[(i + 1) % points.size()];
 
             
             if (p1.y() == p2.y())
@@ -616,7 +616,7 @@ void ViewerWidget::Scan_line(const QColor& color)
 
             for (int x = xStart; x <= xEnd; x++) {
                 
-                    setPixel(x, y, color);
+                    setZPixel(x, y, z,color);
                 
             }
         }
@@ -874,19 +874,113 @@ void ViewerWidget::drawCurve(const QColor& color)
 
 void ViewerWidget::draw3D(Widget3D widget3D)
 {
+   Zbuffer.clear();
+   Zbuffer.resize(img->width());
+   for (int x = 0; x < img->width(); x++) {
+       Zbuffer[x].resize(img->width());
+
+       for (int y = 0; y < img->width(); y++) {
+           Zbuffer[x][y] = -1000000000;
+       }
+   }
    img->fill(Qt::white);
+
    QVector<Point> projectedPoints = widget3D.cameraManager();
    QVector<Triangle> triangles = widget3D.getTriangles();
-   for (auto& t : triangles) {
-       
-       int t1 = t.trianglePoints[0];
-       int t2 = t.trianglePoints[1];
-       int t3 = t.trianglePoints[2];
+   int i = 0, j = 0;
+   if (widget3D.getWireframeStatus() == 0) {
+       if (widget3D.getCubeOrSphere() == 0) {
+           for (auto& t : triangles) {
 
-       drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue);
-       drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue);
-       drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue);
+               int t1 = t.trianglePoints[0];
+               int t2 = t.trianglePoints[1];
+               int t3 = t.trianglePoints[2];
+
+               double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z) / 3;
+
+               drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue,z);
+               drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue, z);
+               drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue,z);
+               
+               QVector<QPoint> triagPoints;
+               triagPoints.push_back(QPoint(projectedPoints[t1].x + width() / 2,projectedPoints[t1].y + width() / 2));
+               triagPoints.push_back(QPoint(projectedPoints[t2].x + width() / 2,projectedPoints[t2].y + width() / 2));
+               triagPoints.push_back(QPoint(projectedPoints[t3].x + width() / 2,projectedPoints[t3].y + width() / 2));
+
+               
+               
+               //double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z)/3;
+
+               Scan_line(triagPoints, cubeColor[j],z);
+               i++;
+               if (i % 2 == 0)
+                   j++;
+           }
+        
+       }
+       else {
+           for (auto& t : triangles) {
+
+               int t1 = t.trianglePoints[0];
+               int t2 = t.trianglePoints[1];
+               int t3 = t.trianglePoints[2];
+
+               double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z) / 3;
+
+               drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue, z);
+               drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue, z);
+               drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue, z);
+
+               QVector<QPoint> triagPoints;
+               triagPoints.push_back(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2));
+               triagPoints.push_back(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2));
+               triagPoints.push_back(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2));
+
+
+
+               //double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z) / 3;
+
+               Scan_line(triagPoints, cubeColor[j], z);
+              /* i++;
+               if (i % 2 == 0)
+                   j++;*/
+           }
+           
+
+
+       }
+   }
+   else {
+       for (auto& t : triangles) {
+
+           int t1 = t.trianglePoints[0];
+           int t2 = t.trianglePoints[1];
+           int t3 = t.trianglePoints[2];
+
+           drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue);
+           drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue);
+           drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue);
+       }
+      
+
+
+
    }
    update();
+}
+
+void ViewerWidget::setZPixel(double x, double y, double z, QColor c)
+{
+    if (x < 0 || x >= img->width() || y < 0 || y >= img->height()) {
+        return;
+    }
+    if (Zbuffer.isEmpty()) {
+        setPixel(x, y, c); return;
+    }
+    if (z > Zbuffer[x][y]) {
+        Zbuffer[x][y] = z;
+        setPixel(x,y,c);
+    }
+
 }
 

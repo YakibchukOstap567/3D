@@ -477,7 +477,7 @@ void ImageViewer::on_cubeButton_clicked()
 {
     double l = ui->length->value();
     w3D.cubeCreator(l);
-
+    w3D.setCubeOrSphere(0);
 
 }
 
@@ -487,7 +487,7 @@ void ImageViewer::on_sphereButton_clicked()
     double p = ui->poludnik->value();
     double m = ui->rovnobezka->value();
     w3D.sphereCreator(r, p, m);
-
+    w3D.setCubeOrSphere(1);
 
 }
 
@@ -497,6 +497,7 @@ void ImageViewer::on_draw3D_clicked()
     w3D.setZenit(ui->zenit->value());
     w3D.setProjectionType(ui->projectionTypeBox->currentIndex());
     w3D.setRange(ui->range->value());
+    w3D.setWireframeStatus(ui->wireframe->isChecked());
     vW->draw3D(w3D);
 }
 

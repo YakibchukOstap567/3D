@@ -32,7 +32,8 @@ private:
     QVector<QPoint> curveEvaluated;
 
     Widget3D w3D;
-   
+    QVector<QVector<double>> Zbuffer;
+    QColor cubeColor[6] = {QColor::fromHsv(0, 255, 255),QColor::fromHsv(60, 255, 255),QColor::fromHsv(120, 255, 255),QColor::fromHsv(180, 255, 255),QColor::fromHsv(240, 255, 255),QColor::fromHsv(300, 255, 255)};
 public:
     ViewerWidget(QSize imgSize, QWidget* parent = Q_NULLPTR);
     ~ViewerWidget();
@@ -66,7 +67,7 @@ public:
     void clear();
 
     
-    void drawLineDDA(QPoint start, QPoint end, QColor color);
+    void drawLineDDA(QPoint start, QPoint end, QColor color, double z);
     void drawLineBresenham(QPoint start, QPoint end, QColor color);
     void drawCircle(QPoint start, QPoint end, QColor color);
     void drawPolygon(QColor color, int algType, bool closed = true);
@@ -93,7 +94,7 @@ public:
     QVector<QPoint> lineClip(QPoint P1, QPoint P2);
     QVector<QPoint> clipPolygon(const QVector<QPoint>& sourcePoints);
 
-    void Scan_line(const QColor& color);
+    void Scan_line(QVector<QPoint> points, const QColor& color, double z);
     void setScan(bool state) { fillEnabled = state; }
     bool getScan() { return fillEnabled; }
 
@@ -123,6 +124,7 @@ public:
     void BSpline();
     void drawCurve(const QColor& color);
     void draw3D(Widget3D widget3D);
+    void  setZPixel(double x, double y, double z, QColor c);
 public slots:
     void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 
