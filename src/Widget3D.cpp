@@ -155,8 +155,8 @@ bool Widget3D::vtkLoad(QString file)
 QVector<Point> Widget3D::cameraManager()
 {
 	double Ux, Uy, Uz, Nx, Ny, Nz, Vx, Vy, Vz;
-	//QVector<Point> Vi;
-	QVector<Point> projectedPoints;
+	QVector<Point> Vi;
+	/*QVector<Point> projectedPoints;*/
 	double z = zenit * M_PI / 180;
 	double a = azimut * M_PI / 180;
 	Ux = sin(z+ M_PI / 2 ) * sin(a);
@@ -175,11 +175,11 @@ QVector<Point> Widget3D::cameraManager()
 	Vy = cos(z + M_PI / 2) * sin(a) * sin(z) - sin(z + M_PI / 2) * sin(a) * cos(z);
 	Vz = sin(z + M_PI / 2) * cos(a) * cos(z)*sin(a) - sin(z + M_PI / 2) * sin(z) * cos(a)*sin(a);*/
 
-	/*for (auto& p : points) {
+	for (auto& p : points) {
 		Vi.push_back({ p.x * Vx + p.y * Vy + p.z * Vz ,p.x * Ux + p.y * Uy + p.z * Uz, p.x * Nx + p.y * Ny + p.z * Nz });
-	}*/
+	}
 	
-	if (projectionType == 0) {
+	/*if (projectionType == 0) {
 		for (auto& p : points) {
 			projectedPoints.push_back({ p.x * Vx + p.y * Vy + p.z * Vz ,p.x * Ux + p.y * Uy + p.z * Uz, p.x * Nx + p.y * Ny + p.z * Nz });
 		}
@@ -191,22 +191,49 @@ QVector<Point> Widget3D::cameraManager()
 		}
 
 	}
-	return projectedPoints;
+	return projectedPoints;*/
+	return Vi;
 }
 
 QVector<Point> Widget3D::projectionManager(QVector<Point> cameraPoints)
 {
+	QVector<Point> projectedPoints;
 	if (projectionType == 0) {
 		for (auto& p : cameraPoints) {
-			cameraPoints.push_back({ p.x * Vx + p.y * Vy + p.z * Vz ,p.x * Ux + p.y * Uy + p.z * Uz, p.x * Nx + p.y * Ny + p.z * Nz });
+			projectedPoints.push_back({ p.x ,p.y, p.z});
 		}
 
 	}
 	else {
 		for (auto& p : cameraPoints) {
-			cameraPoints.push_back({ range * (p.x * Vx + p.y * Vy + p.z * Vz) / (range - (p.x * Nx + p.y * Ny + p.z * Nz)),range * (p.x * Ux + p.y * Uy + p.z * Uz) / (range - (p.x * Nx + p.y * Ny + p.z * Nz)), range * (p.x * Nx + p.y * Ny + p.z * Nz) / (range - (p.x * Nx + p.y * Ny + p.z * Nz)) });
+			projectedPoints.push_back({ range * (p.x) / (range - (p.z)),range * (p.y) / (range - (p.z)), range * (p.z) / (range - (p.z)) });
 		}
 
 	}
-	return cameraPoints;
+	return projectedPoints;
+}
+
+Point Widget3D::lsManager()
+{
+	double Ux, Uy, Uz, Nx, Ny, Nz, Vx, Vy, Vz;
+	Point lsi;
+	/*QVector<Point> projectedPoints;*/
+	double z = zenit * M_PI / 180;
+	double a = azimut * M_PI / 180;
+	Ux = sin(z + M_PI / 2) * sin(a);
+	Uy = sin(z + M_PI / 2) * cos(a);
+	Uz = cos(z + M_PI / 2);
+
+	Nx = sin(z) * sin(a);
+	Ny = sin(z) * cos(a);
+	Nz = cos(z);
+
+	Vx = Uy * Nz - Uz * Ny;
+	Vy = Uz * Nx - Ux * Nz;
+	Vz = Ux * Ny - Uy * Nx;
+
+	lsi.x = ls.x * Vx + ls.y * Vy + ls.z * Vz;
+	lsi.y = ls.x * Ux + ls.y * Uy + ls.z * Uz;
+	lsi.z = ls.x * Nx + ls.y * Ny + ls.z * Nz;
+	return lsi;
 }

@@ -885,13 +885,14 @@ void ViewerWidget::draw3D(Widget3D widget3D)
    }
    img->fill(Qt::white);
 
-   QVector<Point> projectedPoints = widget3D.cameraManager();
+   QVector<Point> cameraPoints = widget3D.cameraManager();
+   QVector<Point> projectedPoints = widget3D.projectionManager(cameraPoints);
    QVector<Triangle> triangles = widget3D.getTriangles();
    QVector<Point> points = widget3D.getPoints();
 
    QVector<QVector<int>> rgbi = widget3D.getRGBI();
    QVector<QVector<double>> rgbd = widget3D.getRGBD();
-   Point ls = widget3D.getLS();
+   Point ls = widget3D.lsManager();
    int range = widget3D.getRange();
    double h = widget3D.getH();
 
@@ -907,9 +908,9 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                int t2 = t.trianglePoints[1];
                int t3 = t.trianglePoints[2];
 
-               double x = (points[t1].x + points[t2].x + points[t3].x) / 3;
-               double y = (points[t1].y + points[t2].y + points[t3].y) / 3;
-               double z = (points[t1].z + points[t2].z + points[t3].z) / 3;
+               double x = (cameraPoints[t1].x + cameraPoints[t2].x + cameraPoints[t3].x) / 3;
+               double y = (cameraPoints[t1].y + cameraPoints[t2].y + cameraPoints[t3].y) / 3;
+               double z = (cameraPoints[t1].z + cameraPoints[t2].z + cameraPoints[t3].z) / 3;
 
                /*double x = (projectedPoints[t1].x + projectedPoints[t2].x + projectedPoints[t3].x) / 3;
                double y = (projectedPoints[t1].y + projectedPoints[t2].y + projectedPoints[t3].y) / 3;
@@ -928,9 +929,9 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                if (widget3D.getTypeOfShading() == 0) {
                    // projectedPoints[t2].x - projectedPoints[t1].x , projectedPoints[t2].y - projectedPoints[t1].y, projectedPoints[t2].z - projectedPoints[t1].z    
                    // projectedPoints[t3].x - projectedPoints[t1].x , projectedPoints[t3].y - projectedPoints[t1].y, projectedPoints[t3].z - projectedPoints[t1].z
-                   double Nx = (points[t2].y - points[t1].y) * (points[t3].z - points[t1].z) - (points[t2].z - points[t1].z) * (points[t3].y - points[t1].y);
-                   double Ny = (points[t2].z - points[t1].z) * (points[t3].x - points[t1].x) - (points[t2].x - points[t1].x) * (points[t3].z - points[t1].z);
-                   double Nz = (points[t2].x - points[t1].x) * (points[t3].y - points[t1].y) - (points[t2].y - points[t1].y) * (points[t3].x - points[t1].x);
+                   double Nx = (cameraPoints[t2].y - cameraPoints[t1].y) * (cameraPoints[t3].z - cameraPoints[t1].z) - (cameraPoints[t2].z - cameraPoints[t1].z) * (cameraPoints[t3].y - cameraPoints[t1].y);
+                   double Ny = (cameraPoints[t2].z - cameraPoints[t1].z) * (cameraPoints[t3].x - cameraPoints[t1].x) - (cameraPoints[t2].x - cameraPoints[t1].x) * (cameraPoints[t3].z - cameraPoints[t1].z);
+                   double Nz = (cameraPoints[t2].x - cameraPoints[t1].x) * (cameraPoints[t3].y - cameraPoints[t1].y) - (cameraPoints[t2].y - cameraPoints[t1].y) * (cameraPoints[t3].x - cameraPoints[t1].x);
 
                    /*double Nx = (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].z - projectedPoints[t1].z) - (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].y - projectedPoints[t1].y);
                    double Ny = (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].x - projectedPoints[t1].x) - (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].z - projectedPoints[t1].z);
@@ -942,13 +943,13 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                    Ny = Ny / lengthN;
                    Nz = Nz / lengthN;
 
-                   double test = Nx * x + Ny * y + Nz * z;
+                   /*double test = Nx * x + Ny * y + Nz * z;
 
                    if (test < 0) {
                        Nx = -Nx;
                        Ny = -Ny;
                        Nz = -Nz;
-                   }
+                   }*/
 
                    double Lx = ls.x - x;
                    double Ly = ls.y - y;

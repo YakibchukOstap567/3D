@@ -33,7 +33,7 @@ private:
 		triangles.push_back(triag);
 	}
 	double h;
-	QVector<Point> cameraPoints;
+	//QVector<Point> cameraPoints;
 public:
 	Widget3D() {
 
@@ -48,11 +48,11 @@ public:
 	
 	void setPoints(QVector<Point> p) { points = p; };
 	void setTriangles(QVector<Triangle> t) { triangles = t; };
-	void setCameraPoints(QVector<Point> p) { cameraPoints = p; };
+	//void setCameraPoints(QVector<Point> p) { cameraPoints = p; };
 
 	QVector<Point> getPoints() { return points; };
 	QVector<Triangle> getTriangles() { return triangles; };
-	QVector<Point> getCameraPoints() { return cameraPoints; };
+	//QVector<Point> getCameraPoints() { return cameraPoints; };
 
 	void setAzimut(int a) { azimut = a; };
 	void setZenit(int z) { zenit = z; };
@@ -88,5 +88,6 @@ public:
 	
 	QVector<Point> cameraManager();
 	QVector<Point> projectionManager(QVector<Point> cameraPoints);
+	Point lsManager();
 };
 
