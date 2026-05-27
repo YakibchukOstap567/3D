@@ -887,6 +887,7 @@ void ViewerWidget::draw3D(Widget3D widget3D)
 
    QVector<Point> projectedPoints = widget3D.cameraManager();
    QVector<Triangle> triangles = widget3D.getTriangles();
+   QVector<Point> points = widget3D.getPoints();
 
    QVector<QVector<int>> rgbi = widget3D.getRGBI();
    QVector<QVector<double>> rgbd = widget3D.getRGBD();
@@ -896,7 +897,7 @@ void ViewerWidget::draw3D(Widget3D widget3D)
 
    int i = 0, j = 0;
    if (widget3D.getWireframeStatus() == 0) {
-       if (widget3D.getCubeOrSphere() == 0) {
+       
 
 
 
@@ -906,13 +907,17 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                int t2 = t.trianglePoints[1];
                int t3 = t.trianglePoints[2];
 
-               double x = (projectedPoints[t1].x + projectedPoints[t2].x + projectedPoints[t3].x) / 3;
-               double y = (projectedPoints[t1].y + projectedPoints[t2].y + projectedPoints[t3].y) / 3;
-               double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z) / 3;
+               double x = (points[t1].x + points[t2].x + points[t3].x) / 3;
+               double y = (points[t1].y + points[t2].y + points[t3].y) / 3;
+               double z = (points[t1].z + points[t2].z + points[t3].z) / 3;
 
-               drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue, z);
+               /*double x = (projectedPoints[t1].x + projectedPoints[t2].x + projectedPoints[t3].x) / 3;
+               double y = (projectedPoints[t1].y + projectedPoints[t2].y + projectedPoints[t3].y) / 3;
+               double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z) / 3;*/
+
+               /*drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue, z);
                drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue, z);
-               drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue, z);
+               drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue, z);*/
 
                QVector<QPoint> triagPoints;
                triagPoints.push_back(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2));
@@ -923,15 +928,27 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                if (widget3D.getTypeOfShading() == 0) {
                    // projectedPoints[t2].x - projectedPoints[t1].x , projectedPoints[t2].y - projectedPoints[t1].y, projectedPoints[t2].z - projectedPoints[t1].z    
                    // projectedPoints[t3].x - projectedPoints[t1].x , projectedPoints[t3].y - projectedPoints[t1].y, projectedPoints[t3].z - projectedPoints[t1].z
-                   double Nx = (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].z - projectedPoints[t1].z) - (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].y - projectedPoints[t1].y);
+                   double Nx = (points[t2].y - points[t1].y) * (points[t3].z - points[t1].z) - (points[t2].z - points[t1].z) * (points[t3].y - points[t1].y);
+                   double Ny = (points[t2].z - points[t1].z) * (points[t3].x - points[t1].x) - (points[t2].x - points[t1].x) * (points[t3].z - points[t1].z);
+                   double Nz = (points[t2].x - points[t1].x) * (points[t3].y - points[t1].y) - (points[t2].y - points[t1].y) * (points[t3].x - points[t1].x);
+
+                   /*double Nx = (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].z - projectedPoints[t1].z) - (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].y - projectedPoints[t1].y);
                    double Ny = (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].x - projectedPoints[t1].x) - (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].z - projectedPoints[t1].z);
-                   double Nz = (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].y - projectedPoints[t1].y) - (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].x - projectedPoints[t1].x);
+                   double Nz = (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].y - projectedPoints[t1].y) - (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].x - projectedPoints[t1].x);*/
 
                    double lengthN = sqrt(Nx * Nx + Ny * Ny + Nz * Nz);
 
                    Nx = Nx / lengthN;
                    Ny = Ny / lengthN;
                    Nz = Nz / lengthN;
+
+                   double test = Nx * x + Ny * y + Nz * z;
+
+                   if (test < 0) {
+                       Nx = -Nx;
+                       Ny = -Ny;
+                       Nz = -Nz;
+                   }
 
                    double Lx = ls.x - x;
                    double Ly = ls.y - y;
@@ -963,7 +980,12 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                    Vy = Vy / lengthV;
                    Vz = Vz / lengthV;
 
-                   double aboba = pow(std::max(0.0, (Vx * Rx + Vy * Ry + Vz * Rz)), h);
+
+                   double VR = Vx * Rx + Vy * Ry + Vz * Rz;
+                   VR = std::max(0.0, VR);
+                   VR = std::min(1.0, VR);
+
+                   double aboba = pow(std::max(0.0, (VR)), h);
 
                    double IsR = rgbi[0][0] * rgbd[1][0] * aboba;
                    double IsG = rgbi[0][1] * rgbd[1][1] * aboba;
@@ -995,115 +1017,18 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                else if (widget3D.getTypeOfShading() == 1) {
 
 
+
+
+
+
                }
 
 
                
            }
         
-       }
-       else {
-           for (auto& t : triangles) {
-
-               int t1 = t.trianglePoints[0];
-               int t2 = t.trianglePoints[1];
-               int t3 = t.trianglePoints[2];
-
-               double x = (projectedPoints[t1].x + projectedPoints[t2].x + projectedPoints[t3].x) / 3;
-               double y = (projectedPoints[t1].y + projectedPoints[t2].y + projectedPoints[t3].y) / 3;
-               double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z) / 3;
-
-               drawLineDDA(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), Qt::blue, z);
-               drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue, z);
-               drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue, z);
-
-               QVector<QPoint> triagPoints;
-               triagPoints.push_back(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2));
-               triagPoints.push_back(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2));
-               triagPoints.push_back(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2));
-
-
-               if (widget3D.getTypeOfShading() == 0) {
-                   // projectedPoints[t2].x - projectedPoints[t1].x , projectedPoints[t2].y - projectedPoints[t1].y, projectedPoints[t2].z - projectedPoints[t1].z    
-                   // projectedPoints[t3].x - projectedPoints[t1].x , projectedPoints[t3].y - projectedPoints[t1].y, projectedPoints[t3].z - projectedPoints[t1].z
-                   double Nx = (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].z - projectedPoints[t1].z) - (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].y - projectedPoints[t1].y);
-                   double Ny = (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].x - projectedPoints[t1].x) - (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].z - projectedPoints[t1].z);
-                   double Nz = (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].y - projectedPoints[t1].y) - (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].x - projectedPoints[t1].x);
-
-                   double lengthN = sqrt(Nx * Nx + Ny * Ny + Nz * Nz);
-
-                   Nx = Nx / lengthN;
-                   Ny = Ny / lengthN;
-                   Nz = Nz / lengthN;
-
-                   double Lx = ls.x - x;
-                   double Ly = ls.y - y;
-                   double Lz = ls.z - z;
-
-                   double lengthL = sqrt(Lx * Lx + Ly * Ly + Lz * Lz);
-
-                   Lx = Lx / lengthL;
-                   Ly = Ly / lengthL;
-                   Lz = Lz / lengthL;
-
-                   double Rx = 2 * (Lx * Nx + Ly * Ny + Lz * Nz) * Nx - Lx;
-                   double Ry = 2 * (Lx * Nx + Ly * Ny + Lz * Nz) * Ny - Ly;
-                   double Rz = 2 * (Lx * Nx + Ly * Ny + Lz * Nz) * Nz - Lz;
-
-                   double lengthR = sqrt(Rx * Rx + Ry * Ry + Rz * Rz);
-
-                   Rx = Rx / lengthR;
-                   Ry = Ry / lengthR;
-                   Rz = Rz / lengthR;
-
-                   double Vx = -x;
-                   double Vy = -y;
-                   double Vz = range - z;
-
-                   double lengthV = sqrt(Vx * Vx + Vy * Vy + Vz * Vz);
-
-                   Vx = Vx / lengthV;
-                   Vy = Vy / lengthV;
-                   Vz = Vz / lengthV;
-
-                   double IsR = rgbi[0][0] * rgbd[1][0] * pow(std::max(0.0, (Vx * Rx + Vy * Ry + Vz * Rz)), h);
-                   double IsG = rgbi[0][1] * rgbd[1][1] * pow(std::max(0.0, (Vx * Rx + Vy * Ry + Vz * Rz)), h);
-                   double IsB = rgbi[0][2] * rgbd[1][2] * pow(std::max(0.0, (Vx * Rx + Vy * Ry + Vz * Rz)), h);
-
-                   double IdR = rgbi[0][0] * rgbd[0][0] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
-                   double IdG = rgbi[0][1] * rgbd[0][1] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
-                   double IdB = rgbi[0][2] * rgbd[0][2] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
-
-                   double IaR = rgbi[1][0] * rgbd[2][0];
-                   double IaG = rgbi[1][1] * rgbd[2][1];
-                   double IaB = rgbi[1][2] * rgbd[2][2];
-
-                   double IR = IsR + IdR + IaR;
-                   double IG = IsG + IdG + IaG;
-                   double IB = IsB + IdB + IaB;
-
-                   int r = qBound(0, (int)IR, 255);
-                   int g = qBound(0, (int)IG, 255);
-                   int b = qBound(0, (int)IB, 255);
-
-                   QColor rgb = QColor::fromRgb(r, g, b);
-                   Scan_line(triagPoints, rgb, z);
-               }
-               else if (widget3D.getTypeOfShading() == 1) {
-
-
-               }
-               //double z = (projectedPoints[t1].z + projectedPoints[t2].z + projectedPoints[t3].z) / 3;
-
-               //Scan_line(triagPoints, cubeColor[j], z);
-              /* i++;
-               if (i % 2 == 0)
-                   j++;*/
-           }
-           
-
-
-       }
+      
+       
    }
    else {
        for (auto& t : triangles) {

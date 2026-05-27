@@ -19,7 +19,7 @@ class Widget3D
 {
 private:
 	int azimut = 0, zenit = 0, range = 0;
-	bool projectionType = 0, cubeOrSphere = 0, wireframeStatus = 0, typeOfShading = 0; //cube = o,sphere =1
+	bool projectionType = 0,  wireframeStatus = 0, typeOfShading = 0; //cube = o,sphere =1  cubeOrSphere = 0,
 	QVector<Point> points;
 	QVector<Triangle> triangles;
 	QVector<QVector<int>> rgbi;
@@ -33,6 +33,7 @@ private:
 		triangles.push_back(triag);
 	}
 	double h;
+	QVector<Point> cameraPoints;
 public:
 	Widget3D() {
 
@@ -47,15 +48,17 @@ public:
 	
 	void setPoints(QVector<Point> p) { points = p; };
 	void setTriangles(QVector<Triangle> t) { triangles = t; };
+	void setCameraPoints(QVector<Point> p) { cameraPoints = p; };
 
 	QVector<Point> getPoints() { return points; };
 	QVector<Triangle> getTriangles() { return triangles; };
+	QVector<Point> getCameraPoints() { return cameraPoints; };
 
 	void setAzimut(int a) { azimut = a; };
 	void setZenit(int z) { zenit = z; };
 	void setProjectionType(bool pt) { projectionType = pt; };
 	void setRange(int r) { range = r; };
-	void setCubeOrSphere(bool cors) { cubeOrSphere = cors; };
+	//void setCubeOrSphere(bool cors) { cubeOrSphere = cors; };
 	void setWireframeStatus(bool w) { wireframeStatus = w; };
 
 	void setRGBI(int lscR, int lscG, int lscB, int alcR, int alcG, int alcB) { rgbi[0][0] = lscR; rgbi[0][1] = lscG; rgbi[0][2] = lscB; rgbi[1][0] = alcR; rgbi[1][1] = alcG; rgbi[1][2] = alcB;};
@@ -68,7 +71,7 @@ public:
 	int getZenit() { return zenit; };
 	bool getProjectionType() { return projectionType; };
 	int getRange() { return range; };
-	bool getCubeOrSphere() { return cubeOrSphere; };
+	//bool getCubeOrSphere() { return cubeOrSphere; };
 	bool getWireframeStatus() { return wireframeStatus; };
 	double getH() { return h; };
 
@@ -84,5 +87,6 @@ public:
 	bool vtkLoad(QString file);
 	
 	QVector<Point> cameraManager();
+	QVector<Point> projectionManager(QVector<Point> cameraPoints);
 };
 

@@ -477,7 +477,7 @@ void ImageViewer::on_cubeButton_clicked()
 {
     double l = ui->length->value();
     w3D.cubeCreator(l);
-    w3D.setCubeOrSphere(0);
+    //w3D.setCubeOrSphere(0);
 
 }
 
@@ -487,7 +487,7 @@ void ImageViewer::on_sphereButton_clicked()
     double p = ui->poludnik->value();
     double m = ui->rovnobezka->value();
     w3D.sphereCreator(r, p, m);
-    w3D.setCubeOrSphere(1);
+    //w3D.setCubeOrSphere(1);
 
 }
 
