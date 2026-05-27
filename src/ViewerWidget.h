@@ -124,7 +124,7 @@ public:
     void BSpline();
     void drawCurve(const QColor& color);
     void draw3D(Widget3D widget3D);
-    void  setZPixel(double x, double y, double z, QColor c);
+    void  setZPixel(int x, int y, double z, QColor c);
 public slots:
     void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 

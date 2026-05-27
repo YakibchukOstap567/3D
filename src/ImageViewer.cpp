@@ -498,6 +498,11 @@ void ImageViewer::on_draw3D_clicked()
     w3D.setProjectionType(ui->projectionTypeBox->currentIndex());
     w3D.setRange(ui->range->value());
     w3D.setWireframeStatus(ui->wireframe->isChecked());
+    w3D.setRGBI(ui->lscR->value(), ui->lscG->value(), ui->lscB->value(), ui->alcR->value(), ui->alcG->value(), ui->alcB->value() );
+    w3D.setRGBD(ui->dR->value(), ui->dG->value(), ui->dB->value(), ui->rR->value(), ui->rG->value(), ui->rB->value(),ui->aR->value(), ui->aG->value(), ui->aB->value());
+    w3D.setLS(ui->lsX->value(), ui->lsY->value(), ui->lsZ->value());
+    w3D.setTypeOfShading(ui->typeOfShading->currentIndex());
+    w3D.setH(ui->shininess->value());
     vW->draw3D(w3D);
 }
 
