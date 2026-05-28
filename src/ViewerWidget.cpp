@@ -896,7 +896,9 @@ void ViewerWidget::draw3D(Widget3D widget3D)
    int range = widget3D.getRange();
    double h = widget3D.getH();
 
-   int i = 0, j = 0;
+   QColor rgb3[3];
+   QPoint pos[3];
+   //int i = 0, j = 0;
    if (widget3D.getWireframeStatus() == 0) {
        
 
@@ -908,9 +910,23 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                int t2 = t.trianglePoints[1];
                int t3 = t.trianglePoints[2];
 
+
+
                double x = (cameraPoints[t1].x + cameraPoints[t2].x + cameraPoints[t3].x) / 3;
                double y = (cameraPoints[t1].y + cameraPoints[t2].y + cameraPoints[t3].y) / 3;
                double z = (cameraPoints[t1].z + cameraPoints[t2].z + cameraPoints[t3].z) / 3;
+
+               QVector<QPoint> triagPoints;
+               triagPoints.push_back(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2));
+               triagPoints.push_back(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2));
+               triagPoints.push_back(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2));
+
+
+
+
+               /*double x = cameraPoints[t1].x;
+               double y = cameraPoints[t1].y;
+               double z = cameraPoints[t1].z;*/
 
                /*double x = (projectedPoints[t1].x + projectedPoints[t2].x + projectedPoints[t3].x) / 3;
                double y = (projectedPoints[t1].y + projectedPoints[t2].y + projectedPoints[t3].y) / 3;
@@ -920,13 +936,26 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                drawLineDDA(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2), QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), Qt::blue, z);
                drawLineDDA(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2), QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2), Qt::blue, z);*/
 
-               QVector<QPoint> triagPoints;
-               triagPoints.push_back(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2));
-               triagPoints.push_back(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2));
-               triagPoints.push_back(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2));
-
+               
 
                if (widget3D.getTypeOfShading() == 0) {
+
+                   /*int t1 = t.trianglePoints[0];
+                   int t2 = t.trianglePoints[1];
+                   int t3 = t.trianglePoints[2];
+
+
+
+                   double x = (cameraPoints[t1].x + cameraPoints[t2].x + cameraPoints[t3].x) / 3;
+                   double y = (cameraPoints[t1].y + cameraPoints[t2].y + cameraPoints[t3].y) / 3;
+                   double z = (cameraPoints[t1].z + cameraPoints[t2].z + cameraPoints[t3].z) / 3;
+
+                   QVector<QPoint> triagPoints;
+                   triagPoints.push_back(QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2));
+                   triagPoints.push_back(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2));
+                   triagPoints.push_back(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2));*/
+
+
                    // projectedPoints[t2].x - projectedPoints[t1].x , projectedPoints[t2].y - projectedPoints[t1].y, projectedPoints[t2].z - projectedPoints[t1].z    
                    // projectedPoints[t3].x - projectedPoints[t1].x , projectedPoints[t3].y - projectedPoints[t1].y, projectedPoints[t3].z - projectedPoints[t1].z
                    double Nx = (cameraPoints[t2].y - cameraPoints[t1].y) * (cameraPoints[t3].z - cameraPoints[t1].z) - (cameraPoints[t2].z - cameraPoints[t1].z) * (cameraPoints[t3].y - cameraPoints[t1].y);
@@ -1016,9 +1045,120 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                    Scan_line(triagPoints, rgb, z);
                }
                else if (widget3D.getTypeOfShading() == 1) {
+                   for (int i = 0; i < 3; i++) {
+
+                     /*  int t1 = t.trianglePoints[0];
+                       int t2 = t.trianglePoints[1];
+                       int t3 = t.trianglePoints[2];*/
+                       int p = t.trianglePoints[i];
 
 
+                       double x = cameraPoints[p].x;
+                       double y = cameraPoints[p].y;
+                       double z = cameraPoints[p].z;
 
+                       /*QVector<QPoint> triagPoints;
+                       triagPoints.push_back(QPoint(projectedPoints[p].x + width() / 2, projectedPoints[p].y + width() / 2));*/
+                       /*triagPoints.push_back(QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2));
+                       triagPoints.push_back(QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2));*/
+
+
+                       // projectedPoints[t2].x - projectedPoints[t1].x , projectedPoints[t2].y - projectedPoints[t1].y, projectedPoints[t2].z - projectedPoints[t1].z    
+                       // projectedPoints[t3].x - projectedPoints[t1].x , projectedPoints[t3].y - projectedPoints[t1].y, projectedPoints[t3].z - projectedPoints[t1].z
+                       /*double Nx = (cameraPoints[t2].y - cameraPoints[t1].y) * (cameraPoints[t3].z - cameraPoints[t1].z) - (cameraPoints[t2].z - cameraPoints[t1].z) * (cameraPoints[t3].y - cameraPoints[t1].y);
+                       double Ny = (cameraPoints[t2].z - cameraPoints[t1].z) * (cameraPoints[t3].x - cameraPoints[t1].x) - (cameraPoints[t2].x - cameraPoints[t1].x) * (cameraPoints[t3].z - cameraPoints[t1].z);
+                       double Nz = (cameraPoints[t2].x - cameraPoints[t1].x) * (cameraPoints[t3].y - cameraPoints[t1].y) - (cameraPoints[t2].y - cameraPoints[t1].y) * (cameraPoints[t3].x - cameraPoints[t1].x);*/
+
+                       /*double Nx = (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].z - projectedPoints[t1].z) - (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].y - projectedPoints[t1].y);
+                       double Ny = (projectedPoints[t2].z - projectedPoints[t1].z) * (projectedPoints[t3].x - projectedPoints[t1].x) - (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].z - projectedPoints[t1].z);
+                       double Nz = (projectedPoints[t2].x - projectedPoints[t1].x) * (projectedPoints[t3].y - projectedPoints[t1].y) - (projectedPoints[t2].y - projectedPoints[t1].y) * (projectedPoints[t3].x - projectedPoints[t1].x);*/
+                       double Nx = x;
+                       double Ny = y;
+                       double Nz = z;
+
+                       double lengthN = sqrt(Nx * Nx + Ny * Ny + Nz * Nz);
+
+                       Nx = Nx / lengthN;
+                       Ny = Ny / lengthN;
+                       Nz = Nz / lengthN;
+
+                       /*double test = Nx * x + Ny * y + Nz * z;
+
+                       if (test < 0) {
+                           Nx = -Nx;
+                           Ny = -Ny;
+                           Nz = -Nz;
+                       }*/
+
+                       double Lx = ls.x - x;
+                       double Ly = ls.y - y;
+                       double Lz = ls.z - z;
+
+                       double lengthL = sqrt(Lx * Lx + Ly * Ly + Lz * Lz);
+
+                       Lx = Lx / lengthL;
+                       Ly = Ly / lengthL;
+                       Lz = Lz / lengthL;
+
+                       double Rx = 2 * (Lx * Nx + Ly * Ny + Lz * Nz) * Nx - Lx;
+                       double Ry = 2 * (Lx * Nx + Ly * Ny + Lz * Nz) * Ny - Ly;
+                       double Rz = 2 * (Lx * Nx + Ly * Ny + Lz * Nz) * Nz - Lz;
+
+                       double lengthR = sqrt(Rx * Rx + Ry * Ry + Rz * Rz);
+
+                       Rx = Rx / lengthR;
+                       Ry = Ry / lengthR;
+                       Rz = Rz / lengthR;
+
+                       double Vx = -x;
+                       double Vy = -y;
+                       double Vz = range - z;
+
+                       double lengthV = sqrt(Vx * Vx + Vy * Vy + Vz * Vz);
+
+                       Vx = Vx / lengthV;
+                       Vy = Vy / lengthV;
+                       Vz = Vz / lengthV;
+
+
+                       double VR = Vx * Rx + Vy * Ry + Vz * Rz;
+                       VR = std::max(0.0, VR);
+                       VR = std::min(1.0, VR);
+
+                       double aboba = pow(std::max(0.0, (VR)), h);
+
+                       double IsR = rgbi[0][0] * rgbd[1][0] * aboba;
+                       double IsG = rgbi[0][1] * rgbd[1][1] * aboba;
+                       double IsB = rgbi[0][2] * rgbd[1][2] * aboba;
+
+                       double IdR = rgbi[0][0] * rgbd[0][0] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
+                       double IdG = rgbi[0][1] * rgbd[0][1] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
+                       double IdB = rgbi[0][2] * rgbd[0][2] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
+
+                       double IaR = rgbi[1][0] * rgbd[2][0];
+                       double IaG = rgbi[1][1] * rgbd[2][1];
+                       double IaB = rgbi[1][2] * rgbd[2][2];
+
+                       double IR = IsR + IdR + IaR;
+                       double IG = IsG + IdG + IaG;
+                       double IB = IsB + IdB + IaB;
+
+                       /*int r = qBound(0, static_cast<int>(rgbi[0][0] * rgbd[1][0] * aboba + rgbi[0][0] * rgbd[0][0] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz)) + rgbi[1][0] * rgbd[2][0]), 255);
+                       int g = qBound(0, static_cast<int>(rgbi[0][1] * rgbd[1][1] * aboba + rgbi[0][1] * rgbd[0][1] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz)) + rgbi[1][1] * rgbd[2][1]), 255);
+                       int b = qBound(0, static_cast<int>(IB), 255);*/
+
+                       int r = qBound(0, (int)IR, 255);
+                       int g = qBound(0, (int)IG, 255);
+                       int b = qBound(0, (int)IB, 255);
+
+                       rgb3[i] = QColor::fromRgb(r, g, b);
+                       //Scan_line(triagPoints, rgb, z);
+                       pos[i] = QPoint(x + width() / 2,y + width() / 2);
+
+
+                   }
+                   //Qpoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2)
+                   fillTriangle({ QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2) ,rgb3[0] }, { QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2),rgb3[1] }, { QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2),rgb3[2]}, currentFillType);
 
 
 
