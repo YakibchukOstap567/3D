@@ -25,7 +25,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>431</width>
+         <width>373</width>
          <height>1007</height>
         </rect>
        </property>
@@ -390,38 +390,83 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <widget class="QPushButton" name="cubeButton">
-           <property name="text">
-            <string>Cube:</string>
+          <widget class="QGroupBox" name="groupBox_4">
+           <property name="title">
+            <string>3D Creator</string>
            </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="cubeButton">
+              <property name="text">
+               <string>Create Cube:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QDoubleSpinBox" name="length">
+              <property name="maximum">
+               <double>500.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>Lenght:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QPushButton" name="sphereButton">
+              <property name="text">
+               <string>Create Sphere:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_19">
+              <property name="text">
+               <string>Radius:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QDoubleSpinBox" name="radius">
+              <property name="maximum">
+               <double>500.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QSpinBox" name="rovnobezka">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="label_20">
+              <property name="text">
+               <string>Parallel:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QSpinBox" name="poludnik">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="label_21">
+              <property name="text">
+               <string>Meridian:</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="length">
-           <property name="maximum">
-            <double>100.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="sphereButton">
-           <property name="text">
-            <string>Sphere</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="radius">
-           <property name="maximum">
-            <double>500.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="rovnobezka"/>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="poludnik"/>
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_10">
@@ -591,20 +636,6 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QComboBox" name="typeOfShading">
-              <item>
-               <property name="text">
-                <string>Flat shading</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Gouradovo</string>
-               </property>
-              </item>
-             </widget>
-            </item>
             <item row="5" column="1">
              <widget class="QSpinBox" name="lscR">
               <property name="maximum">
@@ -745,7 +776,14 @@
               </property>
              </widget>
             </item>
-            <item row="13" column="3">
+            <item row="13" column="0">
+             <widget class="QLabel" name="label_17">
+              <property name="text">
+               <string>shininess</string>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="1">
              <widget class="QDoubleSpinBox" name="shininess">
               <property name="maximum">
                <double>1000.000000000000000</double>
@@ -753,10 +791,31 @@
              </widget>
             </item>
             <item row="13" column="2">
-             <widget class="QLabel" name="label_17">
-              <property name="text">
-               <string>shininess</string>
-              </property>
+             <widget class="QComboBox" name="typeOfShading">
+              <item>
+               <property name="text">
+                <string>Flat shading</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Gouradovo</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="13" column="3">
+             <widget class="QComboBox" name="typeOfFill">
+              <item>
+               <property name="text">
+                <string>Neighbour</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Baricentrik</string>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>

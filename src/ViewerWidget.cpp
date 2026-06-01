@@ -1159,7 +1159,7 @@ void ViewerWidget::draw3D(Widget3D widget3D)
 
                    }
                    //Qpoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2)
-                   fillTriangle({ QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2) ,rgb3[0], cameraPoints[t1].z }, { QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2),rgb3[1],cameraPoints[t2].z }, { QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2),rgb3[2],cameraPoints[t3].z }, currentFillType);
+                   fillTriangle({ QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2) ,rgb3[0], cameraPoints[t1].z }, { QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2),rgb3[1],cameraPoints[t2].z }, { QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2),rgb3[2],cameraPoints[t3].z }, widget3D.getTypeOfFill());
 
 
 

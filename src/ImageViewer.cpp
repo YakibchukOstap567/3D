@@ -503,6 +503,7 @@ void ImageViewer::on_draw3D_clicked()
     w3D.setLS(ui->lsX->value(), ui->lsY->value(), ui->lsZ->value());
     w3D.setTypeOfShading(ui->typeOfShading->currentIndex());
     w3D.setH(ui->shininess->value());
+    w3D.setTypeOfFill(ui->typeOfFill->currentIndex());
     vW->draw3D(w3D);
 }
 

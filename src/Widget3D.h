@@ -18,7 +18,7 @@ struct Triangle {
 class Widget3D
 {
 private:
-	int azimut = 0, zenit = 0, range = 0;
+	int azimut = 0, zenit = 0, range = 0, typeOfFill = 0;
 	bool projectionType = 0,  wireframeStatus = 0, typeOfShading = 0; //cube = o,sphere =1  cubeOrSphere = 0,
 	QVector<Point> points;
 	QVector<Triangle> triangles;
@@ -66,6 +66,7 @@ public:
 	void setLS(int x, int y, int z) { ls.x = x, ls.y = y, ls.z = z; };
 	void setTypeOfShading(bool s) { typeOfShading = s; };
 	void setH(double h1) { h = h1; };
+	void setTypeOfFill(int tof) { typeOfFill = tof; };
 
 	int getAzimut() { return azimut; };
 	int getZenit() { return zenit; };
@@ -74,6 +75,7 @@ public:
 	//bool getCubeOrSphere() { return cubeOrSphere; };
 	bool getWireframeStatus() { return wireframeStatus; };
 	double getH() { return h; };
+	int getTypeOfFill() { return typeOfFill; };
 
 	QVector<QVector<int>> getRGBI() { return rgbi; };
 	QVector<QVector<double>> getRGBD() { return rgbd; };
