@@ -911,7 +911,7 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                int t2 = t.trianglePoints[1];
                int t3 = t.trianglePoints[2];
 
-
+               
 
                double x = (cameraPoints[t1].x + cameraPoints[t2].x + cameraPoints[t3].x) / 3;
                double y = (cameraPoints[t1].y + cameraPoints[t2].y + cameraPoints[t3].y) / 3;

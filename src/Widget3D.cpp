@@ -41,13 +41,14 @@ void Widget3D::sphereCreator(double r, int p, int m)
 	points.clear();
 	triangles.clear();
 
-	double polar = M_PI / m;
-	double azimut = 2 * M_PI / p;
+	/*double polar = M_PI / m;
+	double azimut = 2 * M_PI / p;*/
 
-	for ( double i = 0; i <= M_PI; i += polar) {
-		for (double j = 0; j <= 2 * M_PI; j += azimut) {
-
-			points.push_back({ r * sin(i) * cos(j),r * cos(i) ,r * sin(i) * sin(j) });
+	for ( int i = 0; i <= m; i ++) {
+		double polar = M_PI*i / m;
+		for (int j = 0; j <= p; j ++) {
+			double azimut = 2 * M_PI *j / p;
+			points.push_back({ r * sin(polar) * cos(azimut),r * cos(polar) ,r * sin(polar) * sin(azimut) });
 
 		}
 
