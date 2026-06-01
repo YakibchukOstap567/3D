@@ -4,6 +4,7 @@
 struct Vertex {
     QPoint pos;
     QColor color;
+    double z;
 };
 
 class ViewerWidget :public QWidget {
@@ -125,6 +126,7 @@ public:
     void drawCurve(const QColor& color);
     void draw3D(Widget3D widget3D);
     void  setZPixel(int x, int y, double z, QColor c);
+    double interpolateZ(int x, int y, Vertex t0, Vertex t1, Vertex t2);
 public slots:
     void paintEvent(QPaintEvent* event) Q_DECL_OVERRIDE;
 

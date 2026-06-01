@@ -676,7 +676,8 @@ void ViewerWidget::fillTrianglePart(int y1, int y2, double x1, double x2, double
         int endX = (int)std::floor(std::max(x1, x2));
 
         for (int x = startX; x <= endX; x++) {
-            setPixel(x, y, getColor(x, y, fillType));
+            double z = interpolateZ(x, y, base_t0, base_t1, base_t2);
+            setZPixel(x, y,z,getColor(x, y, fillType));
         }
 
         x1 += w1;
@@ -897,7 +898,7 @@ void ViewerWidget::draw3D(Widget3D widget3D)
    double h = widget3D.getH();
 
    QColor rgb3[3];
-   QPoint pos[3];
+   //QPoint pos[3];
    //int i = 0, j = 0;
    if (widget3D.getWireframeStatus() == 0) {
        
@@ -972,13 +973,13 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                    Ny = Ny / lengthN;
                    Nz = Nz / lengthN;
 
-                   /*double test = Nx * x + Ny * y + Nz * z;
+                   double test = Nx * x + Ny * y + Nz * z;
 
                    if (test < 0) {
                        Nx = -Nx;
                        Ny = -Ny;
                        Nz = -Nz;
-                   }*/
+                   }
 
                    double Lx = ls.x - x;
                    double Ly = ls.y - y;
@@ -1153,12 +1154,12 @@ void ViewerWidget::draw3D(Widget3D widget3D)
 
                        rgb3[i] = QColor::fromRgb(r, g, b);
                        //Scan_line(triagPoints, rgb, z);
-                       pos[i] = QPoint(x + width() / 2,y + width() / 2);
+                       //pos[i] = QPoint(x + width() / 2,y + width() / 2);
 
 
                    }
                    //Qpoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2)
-                   fillTriangle({ QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2) ,rgb3[0] }, { QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2),rgb3[1] }, { QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2),rgb3[2]}, currentFillType);
+                   fillTriangle({ QPoint(projectedPoints[t1].x + width() / 2, projectedPoints[t1].y + width() / 2) ,rgb3[0], cameraPoints[t1].z }, { QPoint(projectedPoints[t2].x + width() / 2, projectedPoints[t2].y + width() / 2),rgb3[1],cameraPoints[t2].z }, { QPoint(projectedPoints[t3].x + width() / 2, projectedPoints[t3].y + width() / 2),rgb3[2],cameraPoints[t3].z }, currentFillType);
 
 
 
@@ -1204,6 +1205,23 @@ void ViewerWidget::setZPixel(int x, int y, double z, QColor c)
         Zbuffer[x][y] = z;
         setPixel(x,y,c);
     }
+
+}
+
+double ViewerWidget::interpolateZ(int x, int y, Vertex t0, Vertex t1, Vertex t2)
+{
+
+    double A = static_cast<double>((t1.pos.y() -t2.pos.y()) * (t0.pos.x() - t2.pos.x()) + (t2.pos.x() - t1.pos.x()) * (t0.pos.y() - t2.pos.y()));
+
+ 
+    double A0 = ((t1.pos.y() - t2.pos.y()) * (x - t2.pos.x()) + (t2.pos.x() - t1.pos.x()) * (y - t2.pos.y())) / A;
+
+    double A1 = ((t2.pos.y() - t0.pos.y()) * (x - t2.pos.x()) +(t0.pos.x() - t2.pos.x()) * (y - t2.pos.y())) / A;
+    double A2 = 1.0 - A0 - A1;
+
+
+    return A0 * t0.z + A1 * t1.z + A2 * t2.z;
+
 
 }
 
