@@ -973,13 +973,13 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                    Ny = Ny / lengthN;
                    Nz = Nz / lengthN;
 
-                   double test = Nx * x + Ny * y + Nz * z;
+                   /*double test = Nx * x + Ny * y + Nz * z;
 
                    if (test < 0) {
                        Nx = -Nx;
                        Ny = -Ny;
                        Nz = -Nz;
-                   }
+                   }*/
 
                    double Lx = ls.x - x;
                    double Ly = ls.y - y;
@@ -1012,7 +1012,7 @@ void ViewerWidget::draw3D(Widget3D widget3D)
                    Vz = Vz / lengthV;
 
 
-                   double VR = Vx * Rx + Vy * Ry + Vz * Rz;
+                  /* double VR = Vx * Rx + Vy * Ry + Vz * Rz;
                    VR = std::max(0.0, VR);
                    VR = std::min(1.0, VR);
 
@@ -1020,7 +1020,11 @@ void ViewerWidget::draw3D(Widget3D widget3D)
 
                    double IsR = rgbi[0][0] * rgbd[1][0] * aboba;
                    double IsG = rgbi[0][1] * rgbd[1][1] * aboba;
-                   double IsB = rgbi[0][2] * rgbd[1][2] * aboba;
+                   double IsB = rgbi[0][2] * rgbd[1][2] * aboba;*/
+
+                   double IsR = rgbi[0][0] * rgbd[1][0] * pow(std::max(0.0, (Vx * Rx + Vy * Ry + Vz * Rz)), h);
+                   double IsG = rgbi[0][1] * rgbd[1][1] * pow(std::max(0.0, (Vx * Rx + Vy * Ry + Vz * Rz)), h);
+                   double IsB = rgbi[0][2] * rgbd[1][2] * pow(std::max(0.0, (Vx * Rx + Vy * Ry + Vz * Rz)), h);
 
                    double IdR = rgbi[0][0] * rgbd[0][0] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
                    double IdG = rgbi[0][1] * rgbd[0][1] * std::max(0.0, (Lx * Nx + Ly * Ny + Lz * Nz));
@@ -1213,14 +1217,12 @@ double ViewerWidget::interpolateZ(int x, int y, Vertex t0, Vertex t1, Vertex t2)
 
     double A = static_cast<double>((t1.pos.y() -t2.pos.y()) * (t0.pos.x() - t2.pos.x()) + (t2.pos.x() - t1.pos.x()) * (t0.pos.y() - t2.pos.y()));
 
- 
-    double A0 = ((t1.pos.y() - t2.pos.y()) * (x - t2.pos.x()) + (t2.pos.x() - t1.pos.x()) * (y - t2.pos.y())) / A;
-
-    double A1 = ((t2.pos.y() - t0.pos.y()) * (x - t2.pos.x()) +(t0.pos.x() - t2.pos.x()) * (y - t2.pos.y())) / A;
-    double A2 = 1.0 - A0 - A1;
+    double A0 = ((t1.pos.y() - t2.pos.y()) * (x - t2.pos.x()) + (t2.pos.x() - t1.pos.x()) * (y - t2.pos.y()));
+    double A1 = ((t2.pos.y() - t0.pos.y()) * (x - t2.pos.x()) +(t0.pos.x() - t2.pos.x()) * (y - t2.pos.y()));
+    double A2 = A - A0 - A1;
 
 
-    return A0 * t0.z + A1 * t1.z + A2 * t2.z;
+    return A0/A * t0.z + A1/A * t1.z + A2/A * t2.z;
 
 
 }

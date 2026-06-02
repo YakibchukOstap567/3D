@@ -25,7 +25,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>373</width>
+         <width>359</width>
          <height>1007</height>
         </rect>
        </property>
@@ -473,15 +473,22 @@
            <property name="title">
             <string>3D Projection</string>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="QLabel" name="label">
+           <layout class="QFormLayout" name="formLayout">
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>Azimut</string>
+               <string>Zenit</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Projection type:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
              <widget class="QSlider" name="azimut">
               <property name="maximum">
                <number>99</number>
@@ -494,28 +501,21 @@
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Zenit</string>
-              </property>
-             </widget>
-            </item>
-            <item>
+            <item row="4" column="0" colspan="2">
              <widget class="QSlider" name="zenit">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Projection type</string>
+            <item row="6" column="1">
+             <widget class="QSpinBox" name="range">
+              <property name="maximum">
+               <number>1000</number>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="5" column="1">
              <widget class="QComboBox" name="projectionTypeBox">
               <item>
                <property name="text">
@@ -529,24 +529,31 @@
               </item>
              </widget>
             </item>
-            <item>
-             <widget class="QSpinBox" name="range">
-              <property name="maximum">
-               <number>1000</number>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Azimut</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="8" column="0" colspan="2">
              <widget class="QCheckBox" name="wireframe">
               <property name="text">
                <string>Wire-frame only</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="9" column="0" colspan="2">
              <widget class="QPushButton" name="draw3D">
               <property name="text">
                <string>Draw</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_22">
+              <property name="text">
+               <string>Camera range(Z)</string>
               </property>
              </widget>
             </item>
@@ -779,7 +786,7 @@
             <item row="13" column="0">
              <widget class="QLabel" name="label_17">
               <property name="text">
-               <string>shininess</string>
+               <string>sharpness</string>
               </property>
              </widget>
             </item>
